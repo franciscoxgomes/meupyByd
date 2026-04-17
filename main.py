@@ -36,6 +36,6 @@ async def fetch_byd_data():
         resultado = (
             f"VIN: {vin} | "
             f"Bateria: {realtime.elec_percent}% | "
-            f"Autonomia: {realtime.endurance_mileage} km"
+            f"Autonomxxxxia: {realtime.endurance_mileage} km"
         )
         return resultado
