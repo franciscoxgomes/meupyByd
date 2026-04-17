@@ -20,8 +20,8 @@ def hello_byd(request):
     
 async def fetch_byd_data():
     config = ExtendedBydConfig(
-        username=BYD_USERNAME,
-        password=BYD_PASSWORD,
+        username=os.environ.get("BYD_USERNAME"),
+        password=os.environ.get("BYD_PASSWORD"),
     )
 
     async with BydClient(config) as client:
