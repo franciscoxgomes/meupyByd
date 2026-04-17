@@ -1,2 +1,2 @@
 functions-framework
--e git+https://github.com/jkaberg/pyBYD.git
+pybyd
