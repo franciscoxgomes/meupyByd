@@ -14,7 +14,7 @@ port = os.environ.get("PORT", "8080")
 print(f"Iniciando servidor na porta {port}...")
 
 @functions_framework.http
-def hello_http(request):
+def hello_byd(request):
     # O loop do asyncio deve rodar aqui dentro
     return asyncio.run(fetch_byd_data())
     
