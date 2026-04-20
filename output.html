@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BYD Live Status</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ebf1f3;
+      --bg-accent: #d3e2e8;
+      --surface: rgba(255, 255, 255, 0.9);
+      --surface-strong: rgba(255, 255, 255, 0.97);
+      --ink: #0f2530;
+      --muted: #5b727e;
+      --line: #c9d8df;
+      --accent: #007da0;
+      --accent-soft: #e6f4f8;
+      --ok: #1f8c63;
+      --warn: #b57a12;
+      --bad: #b14137;
+      --neutral: #4a6778;
+      --shadow: 0 16px 36px rgba(18, 42, 55, 0.14);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 12% 0, var(--bg-accent) 0, transparent 35%),
+                  radial-gradient(circle at 92% 0, #efe3cc 0, transparent 30%),
+                  linear-gradient(145deg, #f7fafb 0%, var(--bg) 55%, #e4edf0 100%);
+      padding: 14px 14px 20px;
+    }
+    .page { max-width: 1460px; margin: 0 auto; display: grid; gap: 14px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+    .card-pad { padding: 14px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; background: var(--surface-strong); }
+    .kicker { margin:0 0 6px; color:var(--accent); text-transform:uppercase; letter-spacing:0.11em; font-size:0.72rem; font-weight:700; }
+    .status-strip { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap:10px; }
+    .status-chip { border-radius:15px; border:1px solid var(--line); padding:10px 11px; background:var(--surface-strong); box-shadow:0 8px 18px rgba(16,38,53,0.1); }
+    .tone-ok { border-color:rgba(31,140,99,0.35); background:linear-gradient(150deg,rgba(217,244,233,0.82),#fff); }
+    .tone-warn { border-color:rgba(181,122,18,0.32); background:linear-gradient(150deg,rgba(251,239,218,0.84),#fff); }
+    .tone-bad { border-color:rgba(177,65,55,0.36); background:linear-gradient(150deg,rgba(253,227,222,0.82),#fff); }
+    .tone-neutral { border-color:rgba(74,103,120,0.3); background:linear-gradient(150deg,rgba(231,240,245,0.86),#fff); }
+    .hero { display:grid; grid-template-columns:0.95fr 1.05fr; min-height:290px; overflow:hidden; }
+    .hero-visual { background:linear-gradient(145deg,#d8e9f0,#edf4f7); border-right:1px solid var(--line); }
+    .hero-visual img { width:100%; height:100%; object-fit:contain; padding:18px; }
+    .badge-row { display:flex; flex-wrap:wrap; gap:8px; }
+    .badge { background:linear-gradient(180deg,var(--accent-soft),#f6fbfd); border:1px solid #bfd8e4; border-radius:999px; padding:5px 10px; font-size:0.77rem; }
+    .metric-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .metric { border:1px solid var(--line); border-radius:12px; padding:10px; background:#f8fbfd; }
+    .kv-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #d8e4eb; }
+    details { border:1px solid var(--line); border-radius:12px; margin-bottom:9px; background:#f7fafc; }
+    summary { cursor:pointer; padding:10px 12px; font-weight:600; }
+    pre { margin:0; padding:12px; font-size:0.73rem; font-family:"JetBrains Mono",monospace; overflow:auto; background:#fdfefe; }
+    @media (max-width:1220px) { .status-strip { grid-template-columns:repeat(3,minmax(0,1fr)); } .hero { grid-template-columns:1fr; } }
+    @media (max-width:860px) { .status-strip { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="card card-pad topbar">
+      <div>
+        <p class="kicker">BYD Telemetry Snapshot</p>
+        <h1>Vehicle Live Status</h1>
+        <p class="subtitle">Gerado no servidor a partir da API</p>
+      </div>
+      <div style="text-align:right;color:var(--muted);">
+        Gerado em: 2026-04-20 15:33:40
+      </div>
+    </header>
+
+    <section class="status-strip">
+      <article class="status-chip tone-ok"><span class="status-label">Connectivity</span><strong class="status-value">online</strong><div class="status-detail">Connect state: -1</div></article><article class="status-chip tone-ok"><span class="status-label">Battery</span><strong class="status-value">78%</strong><div class="status-detail">Range: 318 km</div></article><article class="status-chip tone-warn"><span class="status-label">Charging</span><strong class="status-value">-1</strong><div class="status-detail">ETA: -1h -1m</div></article><article class="status-chip tone-warn"><span class="status-label">GPS</span><strong class="status-value">unavailable</strong><div class="status-detail"> </div></article><article class="status-chip tone-ok"><span class="status-label">Data Age</span><strong class="status-value">0m ago</strong><div class="status-detail">Source: vehicle realtime</div></article>
+    </section>
+
+    <main class="hero card">
+      <div class="hero-visual">
+        <div style="height:100%;display:grid;place-items:center;color:#4f6d7d;padding:20px;">Sem imagem do veículo disponível</div>
+      </div>
+      <div class="card-pad">
+        <h2 style="margin:0 0 8px;">BYD Vehicle</h2>
+        <p style="margin:0;color:var(--muted);">BYD</p>
+        <div class="badge-row" style="margin-top:14px;">
+          <span class="badge">VIN: <span class="sensitive-value">LC0CE4CC7T0007114</span></span><span class="badge">Vehicle state: <span>2</span></span>
+        </div>
+      </div>
+    </main>
+
+    <section class="card card-pad raw">
+      <details open>
+        <summary>Full output JSON</summary>
+        <pre>{
+  &quot;userId&quot;: &quot;&quot;,
+  &quot;vin&quot;: &quot;LC0CE4CC7T0007114&quot;,
+  &quot;vehicles&quot;: [
+    {
+      &quot;vin&quot;: &quot;LC0CE4CC7T0007114&quot;,
+      &quot;modelName&quot;: &quot;&quot;,
+      &quot;autoAlias&quot;: &quot;&quot;,
+      &quot;autoPlate&quot;: &quot;&quot;,
+      &quot;brandName&quot;: &quot;BYD&quot;,
+      &quot;totalMileage&quot;: 6261.0
+    }
+  ],
+  &quot;vehicleInfo&quot;: {
+    &quot;powerSystem&quot;: 0,
+    &quot;rightRearTirepressure&quot;: -1.0,
+    &quot;chargeState&quot;: 15,
+    &quot;evEndurance&quot;: 318,
+    &quot;rightFrontTireStatus&quot;: -1,
+    &quot;totalEnergy&quot;: &quot;13.5kW·h/100km&quot;,
+    &quot;elecPercent&quot;: 78,
+    &quot;rrSeatVentilationState&quot;: 0,
+    &quot;upgradeStatus&quot;: 0,
+    &quot;rightFrontTirepressure&quot;: -1.0,
+    &quot;engineStatus&quot;: 0,
+    &quot;epb&quot;: -1,
+    &quot;rapidTireLeak&quot;: -1,
+    &quot;oilPressureSystem&quot;: 0,
+    &quot;rrThirdHeatState&quot;: 0,
+    &quot;airRunState&quot;: 0,
+    &quot;eps&quot;: 0,
+    &quot;chargingState&quot;: -1,
+    &quot;totalConsumptionEn&quot;: &quot;13.5kW·h/100km&quot;,
+    &quot;waitStatus&quot;: 0,
+    &quot;leftFrontDoorLock&quot;: 2,
+    &quot;totalPower&quot;: 0.0,
+    &quot;copilotSeatHeatState&quot;: 0,
+    &quot;fullHour&quot;: -1,
+    &quot;enduranceMileage&quot;: 318,
+    &quot;trunkLid&quot;: 0,
+    &quot;pwr&quot;: 2,
+    &quot;leftFrontTireStatus&quot;: -1,
+    &quot;okLight&quot;: 0,
+    &quot;slidingDoor&quot;: 0,
+    &quot;sentryStatus&quot;: 2,
+    &quot;leftRearTireStatus&quot;: -1,
+    &quot;vehicleTimeZone&quot;: &quot;America/Sao_Paulo&quot;,
+    &quot;oilEndurance&quot;: -1,
+    &quot;rightRearDoor&quot;: 0,
+    &quot;mainSettingTempNew&quot;: 0.0,
+    &quot;tirepressureSystem&quot;: 0,
+    &quot;leftRearWindow&quot;: 1,
+    &quot;leftFrontTirepressure&quot;: -1.0,
+    &quot;lrThirdVentilationState&quot;: 0,
+    &quot;energyConsumption&quot;: &quot;11.1&quot;,
+    &quot;rightRearTireStatus&quot;: -1,
+    &quot;mainSettingTemp&quot;: 0,
+    &quot;leftRearTirepressure&quot;: -1.0,
+    &quot;totalMileageV2&quot;: 6261,
+    &quot;skylight&quot;: -1,
+    &quot;enduranceMileageV2Unit&quot;: &quot;km&quot;,
+    &quot;powerGear&quot;: 1,
+    &quot;lrSeatVentilationState&quot;: 0,
+    &quot;svs&quot;: -1,
+    &quot;abs&quot;: 0,
+    &quot;enduranceMileageV2&quot;: 318,
+    &quot;batteryHeatState&quot;: 0,
+    &quot;esp&quot;: 0,
+    &quot;remainingMinutes&quot;: -1,
+    &quot;rrThirdVentilationState&quot;: 0,
+    &quot;rightFrontDoor&quot;: 0,
+    &quot;fullMinute&quot;: -1,
+    &quot;totalMileage&quot;: 6261,
+    &quot;powerBattery&quot;: 0,
+    &quot;rightFrontDoorLock&quot;: 2,
+    &quot;chargeHeatState&quot;: 0,
+    &quot;ect&quot;: 0,
+    &quot;rrSeatHeatState&quot;: 0,
+    &quot;totalConsumption&quot;: &quot;13.5度/百公里&quot;,
+    &quot;tirePressUnit&quot;: 3,
+    &quot;bookingChargingMinute&quot;: 0,
+    &quot;lessOneMin&quot;: false,
+    &quot;vehicleState&quot;: 2,
+    &quot;chargingSystem&quot;: 0,
+    &quot;connectState&quot;: -1,
+    &quot;forehold&quot;: 0,
+    &quot;lrThirdHeatState&quot;: 0,
+    &quot;mainSeatHeatState&quot;: 0,
+    &quot;bookingChargingHour&quot;: 0,
+    &quot;totalOil&quot;: 0.0,
+    &quot;oilPercent&quot;: 0,
+    &quot;mainSeatVentilationState&quot;: 0,
+    &quot;nearestEnergyConsumptionUnit&quot;: &quot;kW·h/100km&quot;,
+    &quot;ectValue&quot;: -1,
+    &quot;leftFrontWindow&quot;: 1,
+    &quot;remainingHours&quot;: -1,
+    &quot;steeringWheelHeatState&quot;: 0,
+    &quot;leftRearDoor&quot;: 0,
+    &quot;tempInCar&quot;: -129,
+    &quot;speed&quot;: 0,
+    &quot;rate&quot;: -999,
+    &quot;rightRearDoorLock&quot;: 2,
+    &quot;leftRearDoorLock&quot;: 2,
+    &quot;copilotSeatVentilationState&quot;: 0,
+    &quot;recent50kmEnergy&quot;: &quot;11.1kW·h/100km&quot;,
+    &quot;brakingSystem&quot;: 0,
+    &quot;gl&quot;: 0.0,
+    &quot;slidingDoorLock&quot;: 2,
+    &quot;totalMileageV2Unit&quot;: &quot;km&quot;,
+    &quot;rightFrontWindow&quot;: 1,
+    &quot;nearestEnergyConsumption&quot;: &quot;11.1&quot;,
+    &quot;ins&quot;: -1,
+    &quot;rightRearWindow&quot;: 1,
+    &quot;repairModeSwitch&quot;: &quot;0&quot;,
+    &quot;powerBatteryConnection&quot;: -1,
+    &quot;srs&quot;: 0,
+    &quot;lrSeatHeatState&quot;: 0,
+    &quot;time&quot;: 1776710008,
+    &quot;leftFrontDoor&quot;: 0,
+    &quot;steeringSystem&quot;: 0,
+    &quot;bookingChargeState&quot;: 0,
+    &quot;onlineState&quot;: 1
+  },
+  &quot;gps&quot;: {
+    &quot;ok&quot;: false,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;gpsInfo&quot;: null
+  }
+}</pre>
+      </details>
+      <details>
+        <summary>vehicleInfo JSON</summary>
+        <pre>{
+  &quot;powerSystem&quot;: 0,
+  &quot;rightRearTirepressure&quot;: -1.0,
+  &quot;chargeState&quot;: 15,
+  &quot;evEndurance&quot;: 318,
+  &quot;rightFrontTireStatus&quot;: -1,
+  &quot;totalEnergy&quot;: &quot;13.5kW·h/100km&quot;,
+  &quot;elecPercent&quot;: 78,
+  &quot;rrSeatVentilationState&quot;: 0,
+  &quot;upgradeStatus&quot;: 0,
+  &quot;rightFrontTirepressure&quot;: -1.0,
+  &quot;engineStatus&quot;: 0,
+  &quot;epb&quot;: -1,
+  &quot;rapidTireLeak&quot;: -1,
+  &quot;oilPressureSystem&quot;: 0,
+  &quot;rrThirdHeatState&quot;: 0,
+  &quot;airRunState&quot;: 0,
+  &quot;eps&quot;: 0,
+  &quot;chargingState&quot;: -1,
+  &quot;totalConsumptionEn&quot;: &quot;13.5kW·h/100km&quot;,
+  &quot;waitStatus&quot;: 0,
+  &quot;leftFrontDoorLock&quot;: 2,
+  &quot;totalPower&quot;: 0.0,
+  &quot;copilotSeatHeatState&quot;: 0,
+  &quot;fullHour&quot;: -1,
+  &quot;enduranceMileage&quot;: 318,
+  &quot;trunkLid&quot;: 0,
+  &quot;pwr&quot;: 2,
+  &quot;leftFrontTireStatus&quot;: -1,
+  &quot;okLight&quot;: 0,
+  &quot;slidingDoor&quot;: 0,
+  &quot;sentryStatus&quot;: 2,
+  &quot;leftRearTireStatus&quot;: -1,
+  &quot;vehicleTimeZone&quot;: &quot;America/Sao_Paulo&quot;,
+  &quot;oilEndurance&quot;: -1,
+  &quot;rightRearDoor&quot;: 0,
+  &quot;mainSettingTempNew&quot;: 0.0,
+  &quot;tirepressureSystem&quot;: 0,
+  &quot;leftRearWindow&quot;: 1,
+  &quot;leftFrontTirepressure&quot;: -1.0,
+  &quot;lrThirdVentilationState&quot;: 0,
+  &quot;energyConsumption&quot;: &quot;11.1&quot;,
+  &quot;rightRearTireStatus&quot;: -1,
+  &quot;mainSettingTemp&quot;: 0,
+  &quot;leftRearTirepressure&quot;: -1.0,
+  &quot;totalMileageV2&quot;: 6261,
+  &quot;skylight&quot;: -1,
+  &quot;enduranceMileageV2Unit&quot;: &quot;km&quot;,
+  &quot;powerGear&quot;: 1,
+  &quot;lrSeatVentilationState&quot;: 0,
+  &quot;svs&quot;: -1,
+  &quot;abs&quot;: 0,
+  &quot;enduranceMileageV2&quot;: 318,
+  &quot;batteryHeatState&quot;: 0,
+  &quot;esp&quot;: 0,
+  &quot;remainingMinutes&quot;: -1,
+  &quot;rrThirdVentilationState&quot;: 0,
+  &quot;rightFrontDoor&quot;: 0,
+  &quot;fullMinute&quot;: -1,
+  &quot;totalMileage&quot;: 6261,
+  &quot;powerBattery&quot;: 0,
+  &quot;rightFrontDoorLock&quot;: 2,
+  &quot;chargeHeatState&quot;: 0,
+  &quot;ect&quot;: 0,
+  &quot;rrSeatHeatState&quot;: 0,
+  &quot;totalConsumption&quot;: &quot;13.5度/百公里&quot;,
+  &quot;tirePressUnit&quot;: 3,
+  &quot;bookingChargingMinute&quot;: 0,
+  &quot;lessOneMin&quot;: false,
+  &quot;vehicleState&quot;: 2,
+  &quot;chargingSystem&quot;: 0,
+  &quot;connectState&quot;: -1,
+  &quot;forehold&quot;: 0,
+  &quot;lrThirdHeatState&quot;: 0,
+  &quot;mainSeatHeatState&quot;: 0,
+  &quot;bookingChargingHour&quot;: 0,
+  &quot;totalOil&quot;: 0.0,
+  &quot;oilPercent&quot;: 0,
+  &quot;mainSeatVentilationState&quot;: 0,
+  &quot;nearestEnergyConsumptionUnit&quot;: &quot;kW·h/100km&quot;,
+  &quot;ectValue&quot;: -1,
+  &quot;leftFrontWindow&quot;: 1,
+  &quot;remainingHours&quot;: -1,
+  &quot;steeringWheelHeatState&quot;: 0,
+  &quot;leftRearDoor&quot;: 0,
+  &quot;tempInCar&quot;: -129,
+  &quot;speed&quot;: 0,
+  &quot;rate&quot;: -999,
+  &quot;rightRearDoorLock&quot;: 2,
+  &quot;leftRearDoorLock&quot;: 2,
+  &quot;copilotSeatVentilationState&quot;: 0,
+  &quot;recent50kmEnergy&quot;: &quot;11.1kW·h/100km&quot;,
+  &quot;brakingSystem&quot;: 0,
+  &quot;gl&quot;: 0.0,
+  &quot;slidingDoorLock&quot;: 2,
+  &quot;totalMileageV2Unit&quot;: &quot;km&quot;,
+  &quot;rightFrontWindow&quot;: 1,
+  &quot;nearestEnergyConsumption&quot;: &quot;11.1&quot;,
+  &quot;ins&quot;: -1,
+  &quot;rightRearWindow&quot;: 1,
+  &quot;repairModeSwitch&quot;: &quot;0&quot;,
+  &quot;powerBatteryConnection&quot;: -1,
+  &quot;srs&quot;: 0,
+  &quot;lrSeatHeatState&quot;: 0,
+  &quot;time&quot;: 1776710008,
+  &quot;leftFrontDoor&quot;: 0,
+  &quot;steeringSystem&quot;: 0,
+  &quot;bookingChargeState&quot;: 0,
+  &quot;onlineState&quot;: 1
+}</pre>
+      </details>
+      <details>
+        <summary>gpsInfo JSON</summary>
+        <pre>{}</pre>
+      </details>
+    </section>
+
+  </div>
+</body>
+</html>
